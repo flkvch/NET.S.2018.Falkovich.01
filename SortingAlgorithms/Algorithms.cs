@@ -8,7 +8,23 @@ namespace SortingAlgorithms
     public static class Algorithms
     {
         #region API
-        private static bool recursive = false;
+
+        /// <summary>
+        /// Merge Sorting of section of the array
+        /// </summary>
+        /// <param name="array">
+        /// The array for sorting
+        /// </param>
+        public static void MergeSort(int[] array)
+        {
+            if (array.Length == 1 || array.Length == 0)
+            {
+                return;
+            }
+
+            int start = 0, end = array.Length - 1;
+            MergeSort(array, start, end);
+        }
 
         /// <summary>
         /// Merge Sorting of section of the array
@@ -22,19 +38,31 @@ namespace SortingAlgorithms
         /// <param name="end">
         /// The end position of section
         /// </param>
-        public static void MergeSort(int[] array, int start = -1, int end = -1)
+        public static void MergeSort(int[] array, int start, int end)
         {
-            if (!IsValidArray(array.Length))
+            if (start > end)
             {
-                return;
+                throw new ArgumentException();
             }
 
-            ValidSetSection(array, ref start, ref end);
             Insert(array, Divide(array, start, end), start, end);
         }
 
+
         /// <summary>
-        /// Quick Sorting
+        /// Quick Sorting the array
+        /// </summary>
+        /// <param name="array">
+        /// The array for sorting
+        /// </param>
+        public static void QuickSort(int[] array)
+        {
+            int start = 0, end = array.Length - 1;
+            QuickSort(array, start, end, true);
+        }
+
+        /// <summary>
+        /// Quick Sorting the part of the array
         /// </summary>
         /// <param name="array">
         /// The array for sorting
@@ -45,124 +73,30 @@ namespace SortingAlgorithms
         /// <param name="end">
         /// The end position
         /// </param>
-        public static void QuickSort(int[] array, int start = -1, int end = -1)
+        /// <param name="callFromOverrideMethod">
+        /// Is true, when function is called from override method or recursive 
+        /// and doesn't need validation of entered start and end positions.
+        /// </param>
+        public static void QuickSort(int[] array, int start, int end, bool callFromOverrideMethod = false)
         {
-            if (recursive == false)
+            if (!callFromOverrideMethod)
             {
                 if (start > end)
-                {
                     throw new ArgumentException();
-                }
-
-                recursive = true;
             }
 
-            if (!IsValidArray(array.Length, start, end))
+            if (start >= end)
             {
                 return;
             }
 
-            ValidSetSection(array, ref start, ref end);
             int pivot = Partition(array, start, end);
-            QuickSort(array, start, pivot - 1);
-            QuickSort(array, pivot + 1, end);
+            QuickSort(array, start, pivot - 1, true);
+            QuickSort(array, pivot + 1, end, true);
         }
         #endregion
 
-        #region Private
-        /// <summary>
-        /// Validation and setting section of sorting
-        /// </summary>
-        /// <param name="array">
-        /// The array for sorting
-        /// </param>
-        /// <param name="start">
-        /// The start position of section
-        /// </param>
-        /// <param name="end">
-        /// The end position of section
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Throws when the start position is bigger than the end position
-        /// </exception>
-        private static void ValidSetSection(int[] array, ref int start, ref int end)
-        {
-            if (start <= end)
-            {
-                if (end == -1 && start == -1)
-                {
-                    start = 0;
-                    end = array.Length - 1;
-                }
-                else
-                {
-                    if (end == -1 || start == -1)
-                    {
-                        throw new ArgumentException();
-                    }
-                }
-            }
-            else
-            {
-                throw new ArgumentException();
-            }
-        }
-
-        /// <summary>
-        /// Checking validation of the array for sorting 
-        /// </summary>
-        /// <param name="length">
-        /// Length of the array
-        /// </param>
-        /// <param name="start">
-        /// Start position
-        /// </param>
-        /// <param name="end">
-        /// End position
-        /// </param>
-        /// <returns>
-        /// Validation
-        /// </returns>
-        private static bool IsValidArray(int length, int start, int end)
-        {
-            if (length == 0 || length == 1)
-            {
-                return false;
-            }
-
-            if (start > end)
-            {
-                if (end == -1 && start == -1)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Checking validation of the array for sorting 
-        /// </summary>
-        /// <param name="length">
-        /// Length of the array
-        /// </param>
-        /// <returns>
-        /// Validation
-        /// </returns>
-        private static bool IsValidArray(int length)
-        {
-            if (length == 0 || length == 1)
-            {
-                return false;
-            }
-
-            return true;
-        }
+        #region Private methods for MergeSort
 
         /// <summary>
         /// Recursive dividing into 2 arrays
@@ -181,7 +115,7 @@ namespace SortingAlgorithms
         /// </returns>
         private static int[] Divide(int[] array, int start, int end)
         {
-            if (!IsValidArray(end + 1 - start))
+            if (end + 1 - start == 1 || end + 1 - start == 0)
             {
                 return array;
             }
@@ -252,21 +186,24 @@ namespace SortingAlgorithms
         }
 
         /// <summary>
-        /// Swap two elements of the array
+        /// Copies values from source array to destination array
         /// </summary>
-        /// <param name="el1">
-        /// The first element 
+        /// <param name="array1">
+        /// destination
         /// </param>
-        /// <param name="el2">
-        /// The second element 
+        /// <param name="array2">
+        /// source
         /// </param>
-        private static void Swap(ref int el1, ref int el2)
+        private static void Insert(int[] array1, int[] array2, int start, int end)
         {
-            int temp = el1;
-            el1 = el2;
-            el2 = temp;
+            for (int i = start, k = 0; i <= end; i++, k++)
+            {
+                array1[i] = array2[k];
+            }
         }
+        #endregion
 
+        #region Private methods for QuickSort
         /// <summary>
         /// Finding the pivot for QuickSort
         /// </summary>
@@ -299,21 +236,21 @@ namespace SortingAlgorithms
         }
 
         /// <summary>
-        /// Copies values from source array to destination array
+        /// Swap two elements of the array
         /// </summary>
-        /// <param name="array1">
-        /// destination
+        /// <param name="el1">
+        /// The first element 
         /// </param>
-        /// <param name="array2">
-        /// source
+        /// <param name="el2">
+        /// The second element 
         /// </param>
-        private static void Insert(int[] array1, int[] array2, int start, int end)
+        private static void Swap(ref int el1, ref int el2)
         {
-            for (int i = start, k = 0; i <= end; i++, k++)
-            {
-                array1[i] = array2[k];
-            }
+            int temp = el1;
+            el1 = el2;
+            el2 = temp;
         }
+
 
         #endregion
     }

@@ -60,26 +60,9 @@ namespace SortingAlgorithms.Tests
         public void MergeSort_BigValuesRandomArray_SortedArray()
         {
             int length = int.MaxValue / 100000;
-            int[] actual = new int[length];
-            Random rnd = new Random();
-            for (int i = 0; i < length; i++)
-            {
-                actual[i] = rnd.Next(-length / 2, length / 2);
-            }
-
+            int[] actual = GenArray(length);
             Algorithms.MergeSort(actual);
-
-            bool check = true;
-            for (int i = 0; i < length - 1; i++)
-            {
-                if (actual[i] > actual[i + 1])
-                {
-                    check = false;
-                    break;
-                }
-            }
-
-            Assert.IsTrue(check);
+            Assert.IsTrue(IsSorted(actual));
         }
 
         [TestMethod]
@@ -93,10 +76,10 @@ namespace SortingAlgorithms.Tests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
-        public void QuickSort_Woutendposition_ArgumentException()
+        public void MergeSort_StartBiggerThanEnd_ArgumentException()
         {
             int[] actual = { 58, 90, 15, 18, 3, 70, 80 };
-            Algorithms.QuickSort(actual, 1);
+            Algorithms.QuickSort(actual, 5, 1);
         }
 
         [TestMethod]
@@ -152,7 +135,7 @@ namespace SortingAlgorithms.Tests
         }
 
         [TestMethod]
-        public void QuickSortSameValuesArray_SortedArray()
+        public void QuickSort_SameValuesArray_SortedArray()
         {
             int[] actual = { 13, 13, 13, 13, 13, 13, 13 };
             int[] expected = { 13, 13, 13, 13, 13, 13, 13 };
@@ -164,26 +147,10 @@ namespace SortingAlgorithms.Tests
         public void QuickSort_BigValuesRandomArray_SortedArray()
         {
             int length = int.MaxValue / 10000;
-            int[] actual = new int[length];
-            Random rnd = new Random();
-            for (int i = 0; i < length; i++)
-            {
-                actual[i] = rnd.Next(-length / 2, length / 2);
-            }
-
+            int[] actual = GenArray(length);
+            
             Algorithms.QuickSort(actual);
-
-            bool check = true;
-            for (int i = 0; i < length - 1; i++)
-            {
-                if (actual[i] > actual[i + 1])
-                {
-                    check = false;
-                    break;
-                }
-            }
-
-            Assert.IsTrue(check);
+            Assert.IsTrue(IsSorted(actual));
         }
 
         [TestMethod]
@@ -193,6 +160,30 @@ namespace SortingAlgorithms.Tests
             Algorithms.QuickSort(actual, 2, 5);
             int[] expected = { 20, 55, 13, 16, 28, 81, 85, 90 };
             CollectionAssert.AreEqual(expected, actual);
+        }
+
+        private bool IsSorted(int[] array)
+        {
+            for (int i = 0; i < array.Length - 1; i++)
+            {
+                if (array[i] > array[i + 1])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private int[] GenArray(int length)
+        {
+            int[] array = new int[length];
+            Random rnd = new Random();
+            for (int i = 0; i < length; i++)
+            {
+                array[i] = rnd.Next(-length / 2, length / 2);
+            }
+
+            return array;
         }
     }
 }
