@@ -10,16 +10,21 @@ namespace SortingAlgorithms
         #region API
 
         /// <summary>
-        /// Merge Sorting of section of the array
+        /// Merge Sorting of section of the <paramref name="array"/>
         /// </summary>
         /// <param name="array">
         /// The array for sorting
         /// </param>
         public static void MergeSort(int[] array)
         {
-            if (array.Length == 1 || array.Length == 0)
+            if (array.Length == 1)
             {
                 return;
+            }
+
+            if (array.Length == 0)
+            {
+                throw new ArgumentException(nameof(array));
             }
 
             int start = 0, end = array.Length - 1;
@@ -42,7 +47,7 @@ namespace SortingAlgorithms
         {
             if (start > end)
             {
-                throw new ArgumentException();
+                throw new ArgumentException("End position sould be bigger than start position");
             }
 
             Insert(array, Divide(array, start, end), start, end);
@@ -79,10 +84,18 @@ namespace SortingAlgorithms
         /// </param>
         public static void QuickSort(int[] array, int start, int end, bool callFromOverrideMethod = false)
         {
+            if (array.Length == 0)
+            {
+                throw new ArgumentException(nameof(array));
+            }
+
             if (!callFromOverrideMethod)
             {
                 if (start > end)
-                    throw new ArgumentException();
+                {
+                    throw new ArgumentException("End position sould be bigger than start position");
+                }
+
             }
 
             if (start >= end)
@@ -196,9 +209,12 @@ namespace SortingAlgorithms
         /// </param>
         private static void Insert(int[] array1, int[] array2, int start, int end)
         {
-            for (int i = start, k = 0; i <= end; i++, k++)
+            if (start != end)
             {
-                array1[i] = array2[k];
+                for (int i = start, k = 0; i <= end; i++, k++)
+                {
+                    array1[i] = array2[k];
+                }
             }
         }
         #endregion

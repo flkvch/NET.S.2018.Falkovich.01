@@ -6,18 +6,11 @@ namespace SortingAlgorithms.Tests
     [TestClass]
     public class AlgorithmsTests
     {
+        #region MergeSort tests
         [TestMethod]
         public void MergeSort_ArrayWithOneElement_ArrayWithOneElement()
         {
             int[] expected = { 3 };
-            Algorithms.MergeSort(expected);
-            CollectionAssert.AreEqual(expected, expected);
-        }
-
-        [TestMethod]
-        public void MergeSort_EmptyArray_EmptyArray()
-        {
-            int[] expected = { };
             Algorithms.MergeSort(expected);
             CollectionAssert.AreEqual(expected, expected);
         }
@@ -84,19 +77,24 @@ namespace SortingAlgorithms.Tests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
+        public void MergeSort_EmptyArray_ArgumentException()
+        {
+            int[] actual = { };
+            Algorithms.QuickSort(actual);
+        }
+
+
+        #endregion
+
+        #region QuickSort tests
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
         public void QuickSort_StartBiggerThanEnd_ArgumentException()
         {
             int[] actual = { 58, 90, 15, 18, 3, 70, 80 };
             Algorithms.QuickSort(actual, 5, 1);
         }
 
-        [TestMethod]
-        public void QuickSortEmptyArray_EmptyArray()
-        {
-            int[] expected = { };
-            Algorithms.QuickSort(expected);
-            CollectionAssert.AreEqual(expected, expected);
-        }
 
         [TestMethod]
         public void QuickSort_OneElementArray_OneElementArray()
@@ -162,6 +160,17 @@ namespace SortingAlgorithms.Tests
             CollectionAssert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException))]
+        public void QuickSort_EmptyArray_ArgumentException()
+        {
+            int[] actual = { };
+            Algorithms.QuickSort(actual);
+        }
+
+        #endregion
+
+        #region Private
         private bool IsSorted(int[] array)
         {
             for (int i = 0; i < array.Length - 1; i++)
@@ -185,5 +194,6 @@ namespace SortingAlgorithms.Tests
 
             return array;
         }
+        #endregion
     }
 }
