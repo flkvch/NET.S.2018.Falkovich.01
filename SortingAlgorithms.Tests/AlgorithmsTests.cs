@@ -83,7 +83,6 @@ namespace SortingAlgorithms.Tests
             Algorithms.QuickSort(actual);
         }
 
-
         #endregion
 
         #region QuickSort tests

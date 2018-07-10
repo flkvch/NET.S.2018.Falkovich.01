@@ -10,11 +10,11 @@ namespace SortingAlgorithms
         #region API
 
         /// <summary>
-        /// Merge Sorting of section of the <paramref name="array"/>
+        /// Merge Sorting of section of the <paramref name="array" />
         /// </summary>
-        /// <param name="array">
-        /// The array for sorting
-        /// </param>
+        /// <param name="array">The array for sorting</param>
+        /// <exception cref="ArgumentException">array</exception>
+        /// <exception cref="ArgumentNullException">array</exception>
         public static void MergeSort(int[] array)
         {
             if (array.Length == 1)
@@ -34,15 +34,10 @@ namespace SortingAlgorithms
         /// <summary>
         /// Merge Sorting of section of the array
         /// </summary>
-        /// <param name="array">
-        /// The array for sorting
-        /// </param>
-        /// <param name="start">
-        /// The start position of section
-        /// </param>
-        /// <param name="end">
-        /// The end position of section
-        /// </param>
+        /// <param name="array">The array for sorting</param>
+        /// <param name="start">The start position of section</param>
+        /// <param name="end">The end position of section</param>
+        /// <exception cref="ArgumentException">End position sould be bigger than start position</exception>
         public static void MergeSort(int[] array, int start, int end)
         {
             if (start > end)
@@ -57,9 +52,7 @@ namespace SortingAlgorithms
         /// <summary>
         /// Quick Sorting the array
         /// </summary>
-        /// <param name="array">
-        /// The array for sorting
-        /// </param>
+        /// <param name="array">The array for sorting</param>
         public static void QuickSort(int[] array)
         {
             int start = 0, end = array.Length - 1;
@@ -69,21 +62,19 @@ namespace SortingAlgorithms
         /// <summary>
         /// Quick Sorting the part of the array
         /// </summary>
-        /// <param name="array">
-        /// The array for sorting
-        /// </param>
-        /// <param name="start">
-        /// The start position
-        /// </param>
-        /// <param name="end">
-        /// The end position
-        /// </param>
-        /// <param name="callFromOverrideMethod">
-        /// Is true, when function is called from override method or recursive 
-        /// and doesn't need validation of entered start and end positions.
-        /// </param>
+        /// <param name="array">The array for sorting</param>
+        /// <param name="start">The start position</param>
+        /// <param name="end">The end position</param>
+        /// <param name="callFromOverrideMethod">Is true, when function is called from override method or recursive
+        /// and doesn't need validation of entered start and end positions.</param>
+        /// <exception cref="ArgumentException"> array or End position sould be bigger than start position </exception>
         public static void QuickSort(int[] array, int start, int end, bool callFromOverrideMethod = false)
         {
+            if (array == null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
             if (array.Length == 0)
             {
                 throw new ArgumentException(nameof(array));
@@ -133,20 +124,21 @@ namespace SortingAlgorithms
                 return array;
             }
 
-            int middle = (end + 1 - start) / 2;
+            int middle = start + (end - start) / 2;
             int[] array1 = new int[] { };
+            Array.Resize(ref array1, middle - start + 1);
             int[] array2 = new int[] { };
+            Array.Resize(ref array2, end - middle);
+            int i1 = 0, i2 = 0;
             for (int i = start; i <= end; i++)
             {
-                if (i < middle)
-                {
-                    Array.Resize(ref array1, array1.Length + 1);
-                    array1[array1.Length - 1] = array[i];
+                if (i <= middle)
+                {                    
+                    array1[i1++] = array[i];
                 }
                 else
                 {
-                    Array.Resize(ref array2, array2.Length + 1);
-                    array2[array2.Length - 1] = array[i];
+                    array2[i2++] = array[i];
                 }
             }
 
